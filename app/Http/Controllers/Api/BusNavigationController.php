@@ -10,10 +10,16 @@ class BusNavigationController extends Controller
 {
     public function index()
     {
-        $bus = BusNavigation::all();
-        return response()->json($bus, 200);
+
+        $buses = BusNavigation::with('stops')->get();
+
+
+        $buses->each(function ($bus) {
+            $bus->dotsStart = json_decode($bus->dotsStart, true);
+            $bus->dotsEnd = json_decode($bus->dotsEnd, true);
+        });
+
+        return response()->json($buses, 200);
     }
-
-
 }
 
